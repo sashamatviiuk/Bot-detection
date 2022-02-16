@@ -33,3 +33,4 @@ def data_preprocess():
 
     return X_train_pre, X_test_pre, y_train, y_test
 
+X_train_pre, X_test_pre, y_train, y_test = data_preprocess()
