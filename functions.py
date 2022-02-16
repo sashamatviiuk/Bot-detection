@@ -1,7 +1,10 @@
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+my_path = os.path.abspath(__file__ + '/..')
 
 
 def percent_each_type(df, col, col2):
@@ -11,7 +14,7 @@ def percent_each_type(df, col, col2):
     return d
 
 
-def graph(df1, df2, cols, events=3, type_graph='distplot', bins=10, figsize = (15, 10), save='True'):
+def graph(df1, df2, cols, events=3, type_graph='distplot', bins=10, figsize=(15,10), save=True, name_fig='graph'):
     nrows, ncols = len(cols), events
     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
     n = 1
@@ -32,10 +35,8 @@ def graph(df1, df2, cols, events=3, type_graph='distplot', bins=10, figsize = (1
                 plt.ylabel('Density')
             plt.legend()
             n += 1
-    if save and type_graph=='distplot':
-        plt.savefig('graph/result_displot.png')
-    elif save and type_graph=='hist':
-        plt.savefig('graph/result_hist.png')
+    if save:
+        plt.savefig(my_path + '/graph/' + name_fig + '_' + type_graph + '.png')
     plt.show()
 
 
