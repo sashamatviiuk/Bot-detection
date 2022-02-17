@@ -27,5 +27,5 @@ df, X, y = prep2.create_df()
 X_train, X_test, y_train, y_test = prep2.train_test()
 
 # Scale data
-X_train_pre, X_test_pre = prep2.scale()
+X_train_pre, X_test_pre = prep2.scale_data()
 
