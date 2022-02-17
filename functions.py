@@ -37,7 +37,7 @@ def graph(df1, df2, cols, events=3, type_graph='distplot', bins=10, figsize=(15,
             n += 1
     if save:
         plt.savefig(my_path + '/graph/' + name_fig + '_' + type_graph + '.png')
-    plt.show()
+        plt.show()
 
 
 def bootstrap(n, arr, cols, cat_col):

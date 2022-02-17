@@ -25,7 +25,7 @@ class Preparation():
         self.df1[name] = 1
         self.df2[name] = 0
         df = pd.concat([self.df1, self.df2])
-        X = df.loc[:, self.features.append(self.cat_feature)]
+        X = df.loc[:, df.columns == self.features.append(self.cat_feature)]
         y = df[name]
         return df, X, y
 
@@ -34,7 +34,7 @@ class Preparation():
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
         return X_train, X_test, y_train, y_test
 
-    def scalar(self):
+    def scale(self):
         sc = StandardScaler()
         X_train, X_test, _, _ = self.train_test()
         X_train_pre = sc.fit_transform(X_train)
