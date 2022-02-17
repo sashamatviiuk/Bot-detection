@@ -7,7 +7,7 @@ class Preparation():
     # df1 - DataFrame for alive data
     # df2 - DataFrame for bot data
     # features - ['value', 'duration']
-    # cat_feature - ['event_type']
+    # cat_feature - 'event_type'
 
     def __init__(self, df1, df2, features, cat_feature):
         self.df1 = df1
