@@ -29,8 +29,8 @@ def graph(df1, df2, cols, events=3, type_graph='distplot', bins=10, figsize=(15,
                 plt.hist(arr2[col], label='Bot')
                 plt.xlabel('Values')
             elif type_graph == 'distplot':
-                sns.distplot(np.log(arr1[col]+1), label='Person')
-                sns.distplot(np.log(arr2[col]+1), label='Bot')
+                sns.distplot(np.log(arr1[col]+1e-12), label='Person')
+                sns.distplot(np.log(arr2[col]+1e-12), label='Bot')
                 plt.xlabel('Values')
                 plt.ylabel('Density')
             plt.legend()
