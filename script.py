@@ -1,5 +1,6 @@
 from preprocess import *
 from ML_models import *
+from report import *
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -44,7 +45,8 @@ lr_best.fit(X_train_pre, y_train)
 
 y_pred = lr_best.predict(X_test_pre)
 
-print(classification_report(y_test, y_pred))
+rep = Report(y_pred=y_pred, y_test=y_test)
+rep.clas_report()
 
 
 
