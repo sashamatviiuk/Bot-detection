@@ -25,7 +25,7 @@ class Preparation():
         self.df1[name] = 1
         self.df2[name] = 0
         df = pd.concat([self.df1, self.df2])
-        X = df[self.features+[self.cat_feature]]
+        X = df[[self.cat_feature]+self.features]
         y = df[name]
         return df, X, y
 
