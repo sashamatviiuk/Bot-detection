@@ -7,10 +7,10 @@ import seaborn as sns
 my_path = os.path.abspath(__file__ + '/..')
 
 
-def percent_each_type(df, col, col2):
+def percent_each_type(df, col1, col2):
     d = {}
-    for i in np.unique(df[col]):
-        d[i] = df[df[col] == i][col2].count() / df.shape[0]
+    for i in np.unique(df[col1]):
+        d[i] = df[df[col1] == i][col2].count() / df.shape[0]
     return d
 
 
@@ -25,8 +25,8 @@ def graph(df1, df2, cols, events=3, type_graph='distplot', bins=10, figsize=(15,
             plt.subplot(nrows, ncols, n)
             plt.title('Column name \'{}\', Event Type: {}'.format(col, event))
             if type_graph == 'hist':
-                plt.hist(arr1[col], label='Person')
-                plt.hist(arr2[col], label='Bot')
+                plt.hist(arr1[col], bins=bins, label='Person')
+                plt.hist(arr2[col], bins=bins, label='Bot')
                 plt.xlabel('Values')
             elif type_graph == 'distplot':
                 sns.distplot(np.log(arr1[col]+1e-12), label='Person')
@@ -40,14 +40,14 @@ def graph(df1, df2, cols, events=3, type_graph='distplot', bins=10, figsize=(15,
     plt.show()
 
 
-def bootstrap(n, arr, cols, col2):
+def bootstrap(n, arr, cols, cat_col):
     df1 = pd.DataFrame()
-    for i in np.unique(arr[col2]):
-        dt = arr[arr[col2] == i]
+    for i in np.unique(arr[cat_col]):
+        dt = arr[arr[cat_col] == i]
         df2 = pd.DataFrame()
         for col in cols:
-            z = int(percent_each_type(df=arr, col=col2, col2=col)[i]*n)
-            df2[col2] = pd.Series([i]*z)
+            z = int(percent_each_type(df=arr, col1=cat_col, col2=col)[i]*n)
+            df2[cat_col] = pd.Series([i]*z)
             df2[col] = np.random.choice(dt[col], size=z)
         df1 = df1.append(df2)
     return df1

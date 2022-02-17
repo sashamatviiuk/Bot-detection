@@ -1,26 +1,17 @@
-def graph(df1, df2, cols):
+from preprocess import *
+import warnings
+warnings.filterwarnings('ignore')
 
-        graph(df1, df2, cols=['value', 'duration'], type_graph='distplot', save=True, name_fig='data_graph')
-        graph(df1, df2, cols=['value', 'duration'], type_graph='hist', save=True, name_fig='data_graph')
 
-        graph(df1, df2, cols=['value', 'duration'], type_graph='distplot', save=True, name_fig='bootstrap_graph')
-        graph(df1, df2, cols=['value', 'duration'], type_graph='hist', save=True, name_fig='bootstrap_graph')
 
-        
-        
-        #bootstrap_bot['class'] = 0
-        #person_df['class'] = 1
+df1 = pd.read_csv('data/alive.csv', delimiter=',')
+df2 = pd.read_csv('data/bot.csv', delimiter=',')
 
-        #df = pd.concat([person_df, bootstrap_bot])
+features = ['value', 'duration']
+cat_feature='event_type'
 
-        #X = df.loc[:, ['event_type', 'value', 'duration']]
-        #y = df['class']
+example = Prep(df1, df2, features=features, cat_feature=cat_feature)
+boot_bot = example.bootstrap()
 
-        #X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
-
-        #scaler = StandardScaler()
-
-        #X_train_pre = scaler.fit_transform(X_train)
-        #X_test_pre = scaler.transform(X_test)
-
-        #return X_train_pre, X_test_pre, y_train, y_test
+example2 = Prep(df1=df1, df2=boot_bot, features=features, cat_feature=cat_feature)
+example2.plot_graph()
