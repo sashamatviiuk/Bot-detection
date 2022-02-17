@@ -14,25 +14,21 @@ class Preparation():
         self.df2 = df2
         self.features = features
         self.cat_feature = cat_feature
-  
-    def bootstrap(self):
-        return bootstrap(n=self.df1.shape[0], arr=self.df2, cols=self.features, cat_col=self.cat_feature)
 
     def plot_graph(self, type_graph='distplot', save=True, name_fig='graph'):
         return graph(df1=self.df1, df2=self.df2, cols=self.features, type_graph=type_graph, save=save, name_fig=name_fig)
 
-    def create_df(self, name='class'):
-        self.df1[name] = 1
-        self.df2[name] = 0
+    def create_df(self):
+        self.df1['class'] = 1
+        self.df2['class'] = 0
         df = pd.concat([self.df1, self.df2])
-        X = df[[self.cat_feature]+self.features]
-        y = df[name]
+        X = df.loc[:, [self.cat_feature] + self.features]
+        y = df['class']
         return df, X, y
 
     def train_test(self):
         _, X, y = self.create_df()
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
-        return X_train, X_test, y_train, y_test
+        return train_test_split(X, y, test_size=0.2, stratify=y)
 
     def scale_data(self):
         scaler = StandardScaler()
