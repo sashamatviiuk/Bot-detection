@@ -1,6 +1,9 @@
 from preprocess import *
+from ML_models import *
 import warnings
 warnings.filterwarnings('ignore')
+
+random_state = 23
 
 # Read data
 df1 = pd.read_csv('data/alive.csv', delimiter=',')
@@ -28,4 +31,25 @@ X_train, X_test, y_train, y_test = prep2.train_test()
 
 # Scale data
 X_train_pre, X_test_pre = prep2.scale_data()
+
+# LogisticRegression
+parameters = {'penalty':('l1', 'l2'), 'C':[0.01, 0.1, 1, 10, 100]}
+lr = LogisticRegression(random_state=random_state, solver='liblinear')
+
+base = LogRegClassifier(model=lr, X_train=X_train_pre, y_train=y_train, params=parameters)
+best_params = base.best_params()
+
+lr_best = LogisticRegression(random_state=random_state, solver='liblinear', **best_params)
+lr_best.fit(X_train_pre, y_train)
+
+y_pred = lr_best.predict(X_test_pre)
+
+print(classification_report(y_test, y_pred))
+
+
+
+
+
+
+
 

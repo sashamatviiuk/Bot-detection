@@ -12,14 +12,13 @@ from sklearn.metrics import log_loss
 
 class LogRegClassifier():
 
-    def __init__(self, model, X_train, y_train):
+    def __init__(self, model, X_train, y_train, params):
         self.model = model
         self.X_train = X_train
         self.y_train = y_train
+        self.params = params
 
-    def best_params(self, *params):
-        clf = GridSearchCV(self.model(), *params)
+    def best_params(self):
+        clf = GridSearchCV(self.model, self.params)
         clf.fit(self.X_train, self.y_train)
         return clf.best_params_
-
-    
