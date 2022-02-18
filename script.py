@@ -1,3 +1,6 @@
+from datetime import datetime
+start_time = datetime.now()
+
 from preprocess import *
 from ML_models import *
 from report import *
@@ -10,6 +13,7 @@ warnings.filterwarnings('ignore')
 random_state = 23
 n_splits = 9
 test_size = 0.2
+n_round = 4
 
 # Read data
 df1 = pd.read_csv('data/alive.csv', delimiter=',')
@@ -66,7 +70,7 @@ print('Cross validation metric is ROC-AUC')
 
 model = logreg.logreg_best_params()
 cv_scores = cross_val_score(model, X, y, cv=spl, scoring='roc_auc')
-mean_score, cv_score_std, cv_scores = np.round(np.mean(cv_scores), 4), np.round(np.std(cv_scores), 4), np.round(cv_scores, 4)
+mean_score, cv_score_std, cv_scores = np.round(np.mean(cv_scores), n_round), np.round(np.std(cv_scores), n_round), np.round(cv_scores, n_round)
 print(f'Cross_val_scores {cv_scores}')
 print(f'Mean cross_val_score is {mean_score}')
 print(f'Std cross_val_score is {cv_score_std}')
@@ -78,9 +82,12 @@ print('ROC-AUC on train test datasets with split 80% / 20%')
 y_pred_proba_test = logreg.pred_proba(X_test_pre)
 y_pred_proba_train = logreg.pred_proba(X_train_pre)
 report = Report(y_train=y_train, y_test=y_test, y_pred_train=y_pred_proba_train, y_pred_test=y_pred_proba_test)
-roc_train, roc_test = report.roc_auc_score()
-print(f'ROC-AUC train {roc_train}')
-print(f'ROC-AUC test {roc_test}')
+
+report.test_overfitting(n_round=n_round)
+overfit_logreg = report.plot_overfitting(model='logreg', save=True)
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
 
 
 
