@@ -53,9 +53,10 @@ logreg = LogRegClassifier(X_train=X_train_pre, X_test=X_test_pre, y_train=y_trai
 
 print(f'Best parameters: {logreg.find_best_params()}')
 
-y_pred = logreg.pred()
+y_pred_test = logreg.pred(X_test_pre)
+y_pred_train = logreg.pred(X_train_pre)
 
-report = Report(y_pred=y_pred, y_test=y_test)
+report = Report(y_train=y_train, y_test=y_test, y_pred_train=y_pred_train, y_pred_test=y_pred_test)
 classification_report= report.classification_report()
 
 print('Classification report')
@@ -72,6 +73,14 @@ print(f'Std cross_val_score is {cv_score_std}')
 
 #f1 = report.f1_score(average='binary')
 #print(f'f1_score is {f1}')
+
+print('ROC-AUC on train test datasets with split 80% / 20%')
+y_pred_proba_test = logreg.pred_proba(X_test_pre)
+y_pred_proba_train = logreg.pred_proba(X_train_pre)
+report = Report(y_train=y_train, y_test=y_test, y_pred_train=y_pred_proba_train, y_pred_test=y_pred_proba_test)
+roc_train, roc_test = report.roc_auc_score()
+print(f'ROC-AUC train {roc_train}')
+print(f'ROC-AUC test {roc_test}')
 
 
 

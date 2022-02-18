@@ -29,5 +29,8 @@ class LogRegClassifier():
     def logreg_best_params(self):
         return LogisticRegression(random_state=self.seed, solver='liblinear', **self.find_best_params()).fit(self.X_train, self.y_train)
 
-    def pred(self):
-        return self.logreg_best_params().predict(self.X_test)
+    def pred(self, X):
+        return self.logreg_best_params().predict(X)
+    
+    def pred_proba(self, X):
+        return self.logreg_best_params().predict_proba(X)[:, 1]
