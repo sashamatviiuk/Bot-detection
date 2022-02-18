@@ -1,4 +1,5 @@
 from functions import *
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
@@ -21,18 +22,15 @@ class Preparation():
     def create_df(self):
         self.df1['class'] = 1
         self.df2['class'] = 0
-        df = pd.concat([self.df1, self.df2])
+        df = pd.concat([self.df1, self.df2], ignore_index=True)
         X = df.loc[:, [self.cat_feature] + self.features]
         y = df['class']
-        return df, X, y
+        return X, y
 
-    def train_test(self):
-        _, X, y = self.create_df()
-        return train_test_split(X, y, test_size=0.2, stratify=y)
-
-    def scale_data(self):
+    def prep_split_data(self):
+        X, y = self.create_df()
         scaler = StandardScaler()
-        X_train, X_test, _, _ = self.train_test()
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
         X_train_pre = scaler.fit_transform(X_train)
         X_test_pre = scaler.transform(X_test)
-        return X_train_pre, X_test_pre
+        return X_train_pre, X_test_pre, y_train, y_test

@@ -19,15 +19,15 @@ class LogRegClassifier():
         self.seed = seed
         self.params = params
 
-    def lr(self):
+    def logreg(self):
         return LogisticRegression(random_state=self.seed, solver='liblinear')
 
-    def grid_params(self):
-        clf = GridSearchCV(self.lr(), self.params).fit(self.X_train, self.y_train)
+    def find_best_params(self):
+        clf = GridSearchCV(self.logreg(), self.params).fit(self.X_train, self.y_train)
         return clf.best_params_
 
-    def lr_grid(self):
-        return LogisticRegression(random_state=self.seed, solver='liblinear', **self.grid_params()).fit(self.X_train, self.y_train)
+    def logreg_best_params(self):
+        return LogisticRegression(random_state=self.seed, solver='liblinear', **self.find_best_params()).fit(self.X_train, self.y_train)
 
     def pred(self):
-        return self.lr_grid().predict(self.X_test)
+        return self.logreg_best_params().predict(self.X_test)
