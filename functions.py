@@ -6,13 +6,11 @@ import seaborn as sns
 
 my_path = os.path.abspath(__file__ + '/..')
 
-
 def percent_each_type(df, col1, col2):
     d = {}
     for i in np.unique(df[col1]):
         d[i] = df[df[col1] == i][col2].count() / df.shape[0]
     return d
-
 
 def graph(df1, df2, cols, events=3, type_graph='distplot', bins=10, figsize=(15,10), save=True, name_fig='graph'):
     nrows, ncols = len(cols), events
@@ -38,7 +36,6 @@ def graph(df1, df2, cols, events=3, type_graph='distplot', bins=10, figsize=(15,
     if save:
         plt.savefig(my_path + '/graph/' + name_fig + '_' + type_graph + '.png')
         plt.show()
-
 
 def bootstrap(n, arr, cols, cat_col):
     df1 = pd.DataFrame()

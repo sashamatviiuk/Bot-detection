@@ -1,5 +1,6 @@
 import pandas as pd
-from sklearn.metrics import roc_auc_score, classification_report, f1_score
+from sklearn.metrics import roc_auc_score, classification_report, f1_score, accuracy_score
+from sklearn.model_selection import cross_val_score, StratifiedShuffleSplit
 
 class Report():
     def __init__(self, y_pred, y_test):
@@ -14,5 +15,7 @@ class Report():
 
     def f1_score(self, average='binary'):
         return f1_score(self.y_test, self.y_pred, average=average)
+
+
 
     
