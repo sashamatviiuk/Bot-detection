@@ -1,13 +1,4 @@
-from sklearn.linear_model import LogisticRegression, SGDClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier 
-from sklearn.tree import DecisionTreeClassifier
-import lightgbm as lgb
-
-from sklearn.model_selection import GridSearchCV
-
-import optuna
-from sklearn.metrics import log_loss
+from lib import *
 
 class LogRegClassifier():
 
@@ -22,12 +13,12 @@ class LogRegClassifier():
     def logreg(self):
         return LogisticRegression(random_state=self.seed, solver='liblinear')
 
-    def find_best_params(self):
+    def gridsearch_best_params(self):
         clf = GridSearchCV(self.logreg(), self.params).fit(self.X_train, self.y_train)
         return clf.best_params_
 
     def logreg_best_params(self):
-        return LogisticRegression(random_state=self.seed, solver='liblinear', **self.find_best_params()).fit(self.X_train, self.y_train)
+        return LogisticRegression(random_state=self.seed, solver='liblinear', **self.gridsearch_best_params()).fit(self.X_train, self.y_train)
 
     def pred(self, X):
         return self.logreg_best_params().predict(X)

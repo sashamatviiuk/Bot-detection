@@ -1,9 +1,4 @@
-import os
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.metrics import roc_auc_score, classification_report, f1_score, accuracy_score
-from sklearn.model_selection import cross_val_score, StratifiedShuffleSplit
+from lib import *
 
 my_path = os.path.abspath(__file__ + '/..')
 
@@ -48,8 +43,32 @@ class Report():
         plt.bar(['train', 'test'], [metric_train, metric_test])
         plt.title('Переобучение')
         plt.ylabel(metric_name)
-        plt.savefig(my_path + '/graph/' + name_fig + '_' + model + '.png')
-        plt.close()
+        if save:
+            plt.savefig(my_path + '/graph/' + name_fig + '_' + model + '.png')
+            plt.close()
+
+    def roc_auc_pr_plot(self, name_fig='ROC-PR', save=True):
+        fpr, tpr, _ = roc_curve(self.y_test, self.y_pred_test)
+        auc1 = roc_auc_score(self.y_test, self.y_pred_test)
+        precision, recall, thresholds = precision_recall_curve(self.y_test, self.y_pred_test)
+        auc2 = auc(recall, precision)
+ 
+        ## Plot roc
+        fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(12,5))
+        ax[0].plot(fpr, tpr, label='Logistic Regression (area='+ str(np.round(auc1, 3))+')')
+        ax[0].plot([0, 1], [0, 1], color='navy', lw=3, linestyle='--')
+        ax[0].set(xlabel='False Positive Rate', ylabel='True Positive Rate (Recall)', title='Receiver operating characteristic')
+        ax[0].legend(loc=4)
+        ax[0].grid(True)
+        
+        ## Plot precision-recall curve
+        ax[1].plot(recall, precision, label='Logistic Regression (area='+ str(np.round(auc2, 3))+')')
+        ax[1].set(xlim=[0.0,1.05], ylim=[0.0,1.05], xlabel='Recall', ylabel="Precision", title="Precision-Recall curve")
+        ax[1].legend(loc=4)
+        ax[1].grid(True)
+        if save:
+            plt.savefig(my_path + '/graph/' + name_fig + '.png', dpi=300)
+            plt.close()
         
 
 

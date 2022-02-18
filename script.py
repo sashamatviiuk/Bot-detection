@@ -4,12 +4,15 @@ start_time = datetime.now()
 from preprocess import *
 from ML_models import *
 from report import *
-from sklearn.model_selection import StratifiedShuffleSplit
+from hyper_log import *
+from lib import *
 
 import warnings
 warnings.filterwarnings('ignore')
 
 # Constants
+low = 0.1
+high = 10
 random_state = 23
 n_splits = 9
 test_size = 0.2
@@ -50,46 +53,41 @@ spl = StratifiedShuffleSplit(n_splits=n_splits, test_size=test_size, random_stat
 X_train_pre, X_test_pre, y_train, y_test = prep2.prep_split_data()
 
 # LogisticRegression
-print('LogisticRegression model')
+#print('LogisticRegression model')
 
 params = {'penalty':['l1','l2'], 'C':[0.01, 0.1, 1, 10, 100, 1000]}
 logreg = LogRegClassifier(X_train=X_train_pre, X_test=X_test_pre, y_train=y_train, y_test=y_test, params=params, seed=random_state)
 
-print(f'Best parameters: {logreg.find_best_params()}')
+#print(f'Best parameters: {logreg.gridsearch_best_params()}')
 
-y_pred_test = logreg.pred(X_test_pre)
-y_pred_train = logreg.pred(X_train_pre)
+#y_pred_test = logreg.pred(X_test_pre)
+#y_pred_train = logreg.pred(X_train_pre)
 
-report = Report(y_train=y_train, y_test=y_test, y_pred_train=y_pred_train, y_pred_test=y_pred_test)
-classification_report= report.classification_report()
+#report = Report(y_train=y_train, y_test=y_test, y_pred_train=y_pred_train, y_pred_test=y_pred_test)
+#classification_report= report.classification_report()
 
-print('Classification report')
-print(classification_report)
+#print('Classification report')
+#print(classification_report)
 
-print('Cross validation metric is ROC-AUC')
+#print('Cross validation metric is ROC-AUC')
 
 model = logreg.logreg_best_params()
-cv_scores = cross_val_score(model, X, y, cv=spl, scoring='roc_auc')
-mean_score, cv_score_std, cv_scores = np.round(np.mean(cv_scores), n_round), np.round(np.std(cv_scores), n_round), np.round(cv_scores, n_round)
-print(f'Cross_val_scores {cv_scores}')
-print(f'Mean cross_val_score is {mean_score}')
-print(f'Std cross_val_score is {cv_score_std}')
+#cv_scores = cross_val_score(model, X, y, cv=spl, scoring='roc_auc')
+#mean_score, cv_score_std, cv_scores = np.round(np.mean(cv_scores), n_round), np.round(np.std(cv_scores), n_round), np.round(cv_scores, n_round)
+#print(f'Cross_val_scores {cv_scores}')
+#print(f'Mean cross_val_score is {mean_score}')
+#print(f'Std cross_val_score is {cv_score_std}')
 
-#f1 = report.f1_score(average='binary')
-#print(f'f1_score is {f1}')
+#print('ROC-AUC on train test datasets with split 80% / 20%')
+#y_pred_proba_test = logreg.pred_proba(X_test_pre)
+#y_pred_proba_train = logreg.pred_proba(X_train_pre)
+#report = Report(y_train=y_train, y_test=y_test, y_pred_train=y_pred_proba_train, y_pred_test=y_pred_proba_test)
 
-print('ROC-AUC on train test datasets with split 80% / 20%')
-y_pred_proba_test = logreg.pred_proba(X_test_pre)
-y_pred_proba_train = logreg.pred_proba(X_train_pre)
-report = Report(y_train=y_train, y_test=y_test, y_pred_train=y_pred_proba_train, y_pred_test=y_pred_proba_test)
+#report.test_overfitting(n_round=n_round)
+#overfit_logreg = report.plot_overfitting(model='logreg', save=False)
+#roc_pr = report.roc_auc_pr_plot()
 
-report.test_overfitting(n_round=n_round)
-overfit_logreg = report.plot_overfitting(model='logreg', save=True)
+hype = Hyper_logreg(X_train=X_train_pre, y_train=y_train, cv=spl, seed=random_state, low=low, high=high, step=1)
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
-
-
-
-
-
