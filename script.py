@@ -1,15 +1,13 @@
 from preprocess import *
 from ML_models import *
 from report import *
-from hyper_log import *
+from hyper_func import *
 from lib import *
 
 import warnings
 warnings.filterwarnings('ignore')
 
 # Constants
-low = 0.1
-high = 10
 random_state = 23
 n_splits = 9
 test_size = 0.2
@@ -50,12 +48,18 @@ spl = StratifiedShuffleSplit(n_splits=n_splits, test_size=test_size, random_stat
 X_train_pre, X_test_pre, y_train, y_test = prep2.prep_split_data()
 
 # LogisticRegression
-#print('LogisticRegression model')
+print('LogisticRegression model')
 
 params = {'penalty':['l1','l2'], 'C':[0.01, 0.1, 1, 10, 100, 1000]}
-logreg = LogRegClassifier(X_train=X_train_pre, X_test=X_test_pre, y_train=y_train, y_test=y_test, params=params, seed=random_state)
+model = Classifier(X_train=X_train_pre, y_train=y_train, seed=random_state)
 
-#print(f'Best parameters: {logreg.gridsearch_best_params()}')
+model_classifier1 = model.classifier(clf='LogisticRegression')
+hype1 = Hyper(X_train=X_train_pre, y_train=y_train, cv=spl, clf='LogisticRegression', seed=random_state, model_classifier=model_classifier1, max_evals=10)
+hype1.search()
+
+model_classifier2 = model.classifier(clf='SGDClassifier')
+hype2 = Hyper(X_train=X_train_pre, y_train=y_train, cv=spl, clf='SGDClassifier', seed=random_state, model_classifier=model_classifier2, max_evals=10)
+hype2.search()
 
 #y_pred_test = logreg.pred(X_test_pre)
 #y_pred_train = logreg.pred(X_train_pre)
@@ -68,8 +72,7 @@ logreg = LogRegClassifier(X_train=X_train_pre, X_test=X_test_pre, y_train=y_trai
 
 #print('Cross validation metric is ROC-AUC')
 
-model = logreg.logreg_best_params()
-#cv_scores = cross_val_score(model, X, y, cv=spl, scoring='roc_auc')
+#cv_scores = cross_val_score(logreg, X, y, cv=spl, scoring='roc_auc')
 #mean_score, cv_score_std, cv_scores = np.round(np.mean(cv_scores), n_round), np.round(np.std(cv_scores), n_round), np.round(cv_scores, n_round)
 #print(f'Cross_val_scores {cv_scores}')
 #print(f'Mean cross_val_score is {mean_score}')
@@ -84,4 +87,3 @@ model = logreg.logreg_best_params()
 #overfit_logreg = report.plot_overfitting(model='logreg', save=False)
 #roc_pr = report.roc_auc_pr_plot()
 
-hype = Hyper_logreg(X_train=X_train_pre, y_train=y_train, cv=spl, seed=random_state, low=low, high=high, step=1)
