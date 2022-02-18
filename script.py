@@ -1,6 +1,3 @@
-from datetime import datetime
-start_time = datetime.now()
-
 from preprocess import *
 from ML_models import *
 from report import *
@@ -88,6 +85,3 @@ model = logreg.logreg_best_params()
 #roc_pr = report.roc_auc_pr_plot()
 
 hype = Hyper_logreg(X_train=X_train_pre, y_train=y_train, cv=spl, seed=random_state, low=low, high=high, step=1)
-
-end_time = datetime.now()
-print('Duration: {}'.format(end_time - start_time))
