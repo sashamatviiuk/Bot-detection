@@ -14,11 +14,11 @@ test_size = 0.2
 n_round = 4
 
 # Read data
-df1 = pd.read_csv('data/alive.csv', delimiter=',')
-df2 = pd.read_csv('data/bot.csv', delimiter=',')
+df1 = pd.read_csv('data/df1.csv', delimiter=',')
+df2 = pd.read_csv('data/df2.csv', delimiter=',')
 
-#print(f'Shape of df1 is {df1.shape}')
-#print(f'Shape of df2 is {df2.shape}')
+print(f'Shape of df1 is {df1.shape}')
+print(f'Shape of df2 is {df2.shape}')
 
 type_graph = ['distplot', 'hist']
 features = ['value', 'duration']
@@ -30,6 +30,8 @@ prep1.plot_graph(type_graph=type_graph[0], save=False, name_fig='raw_data_graph'
 prep1.plot_graph(type_graph=type_graph[1], save=False, name_fig='raw_data_graph')
 
 bootstrap_bot = bootstrap(n=df1.shape[0], arr=df2, cols=features, cat_col=cat_feature)
+
+print(f'Shape of df2 after boostsrap {bootstrap_bot.shape}')
 
 df = Preparation(df1=df1, df2=bootstrap_bot, features=features, cat_feature=cat_feature)
 df.plot_graph(type_graph=type_graph[0], save=False, name_fig='bootstrap_graph')
@@ -59,11 +61,9 @@ report = Report(y_train=y_train, y_test=y_test, y_pred_train=y_pred_train, y_pre
 classification_report= report.classification_report()
 
 print('Classification report')
-
 print(classification_report)
 
 print('Cross validation metric is ROC-AUC')
-
 cv_scores = cross_val_score(model.classifier(), X, y, cv=spl, scoring='roc_auc')
 mean_score, cv_score_std, cv_scores = np.round(np.mean(cv_scores), n_round), np.round(np.std(cv_scores), n_round), np.round(cv_scores, n_round)
 print(f'Cross_val_scores {cv_scores}')

@@ -9,7 +9,7 @@ class Report():
         self.y_pred_train = y_pred_train
         self.y_pred_test = y_pred_test
 
-    def classification_report(self, output_dict=True, name='logreg_report', dir='results'):
+    def classification_report(self, output_dict=True, name='classification_report', dir='results'):
         base_report = classification_report(self.y_test, self.y_pred_test, output_dict=output_dict)
         base_report_df = pd.DataFrame(base_report).transpose()
         base_report_df.to_csv(dir + '/' + name, sep='\t', encoding='utf-8')
