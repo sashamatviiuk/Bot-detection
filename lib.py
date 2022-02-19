@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import optuna
 from tqdm import tqdm
 from functools import partial
-from hyperopt import hp, fmin, tpe, Trials, STATUS_OK
+from hyperopt import hp, fmin, tpe, Trials, STATUS_OK, space_eval
 from optuna.integration import LightGBMPruningCallback
 
 from sklearn.pipeline import Pipeline
